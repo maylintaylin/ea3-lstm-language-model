@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Language Model mit LSTM und TensorFlow.js</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#top" class="site-title">
+        Language Model mit LSTM
+      </a>
+
+      <nav class="site-nav" aria-label="Hauptnavigation">
+        <a href="#wortvorhersage" class="nav-link">Wortvorhersage</a>
+        <a href="#evaluation" class="nav-link">Evaluation</a>
+        <a href="#diskussion" class="nav-link">Diskussion</a>
+        <a href="#dokumentation" class="nav-link">Dokumentation</a>
+        <a href="#quellen" class="nav-link">Quellen</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="page-content">
+
+    <section class="intro-card">
+      <p class="intro-eyebrow">
+        Deep Learning – Einsendeaufgabe 3
+      </p>
+
+      <h1 class="intro-title">
+        Trainieren eines Language Models zur Wortvorhersage
+      </h1>
+
+      <p class="intro-text">
+        Diese Webanwendung nutzt ein rekurrentes Long Short-Term Memory
+        Network (LSTM) mit TensorFlow.js zur Wortvorhersage.
+        Nutzer können Text eingeben, Vorhersagen anzeigen,
+        Wörter automatisch ergänzen und neue Texte generieren.
+      </p>
+    </section>
+
+    <section id="wortvorhersage" class="content-card" aria-labelledby="wortvorhersage-title">
+      <div class="section-head">
+        <p class="section-kicker">Bereich 1</p>
+
+        <h2 id="wortvorhersage-title">Wortvorhersage</h2>
+
+        <p class="section-text">
+          Geben Sie einen Text ein und lassen Sie sich die wahrscheinlichsten nächsten Wörter vorhersagen.
+          Die Eingabe sollte aus vollständigen, durch Leerzeichen getrennten Wörtern bestehen.
+        </p>
+      </div>
+
+      <div class="prediction-grid">
+        <article class="prediction-card">
+          <h3>Texteingabe</h3>
+
+          <textarea
+            id="promptInput"
+            class="text-input"
+            rows="6"
+            placeholder="Beispiel: ein modell"
+          ></textarea>
+
+          <div class="button-group">
+            <button id="predictButton" class="primary-button">Vorhersage</button>
+            <button id="continueButton" class="primary-button">Weiter</button>
+            <button id="autoButton" class="primary-button">Auto</button>
+            <button id="stopButton" class="primary-button">Stopp</button>
+            <button id="resetButton" class="primary-button">Reset</button>
+          </div>
+
+          <p class="tile-note">
+            Mit „Vorhersage“ werden die wahrscheinlichsten nächsten Wörter angezeigt.
+            „Weiter“ übernimmt das wahrscheinlichste Wort. „Auto“ generiert automatisch bis zu zehn Wörter.
+          </p>
+        </article>
+
+        <article class="prediction-card">
+          <h3>Wortvorhersagen</h3>
+
+          <p class="tile-note">
+            Die wahrscheinlichsten nächsten Wörter werden mit ihren Wahrscheinlichkeiten angezeigt.
+            Durch Anklicken eines Vorschlags wird das Wort an den Text angehängt.
+          </p>
+
+          <div id="predictionContainer" class="prediction-container">
+            <p>Noch keine Vorhersage vorhanden.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="evaluation" class="content-card" aria-labelledby="evaluation-title">
+      <div class="section-head">
+        <p class="section-kicker">Bereich 2</p>
+
+        <h2 id="evaluation-title">Evaluation</h2>
+
+        <p class="section-text">
+          Darstellung der Modellperformance anhand verschiedener Top-k-Werte.
+          Bewertet wird, ob das korrekte nächste Wort unter den wahrscheinlichsten k Vorhersagen enthalten ist.
+        </p>
+      </div>
+
+      <div class="chart-box">
+        <canvas id="evaluationChart" aria-label="Diagramm zur Top-k-Accuracy"></canvas>
+      </div>
+
+      <ul class="result-list" id="evaluationList">
+        <li>Top-1 Accuracy: wird berechnet...</li>
+        <li>Top-5 Accuracy: wird berechnet...</li>
+        <li>Top-10 Accuracy: wird berechnet...</li>
+        <li>Top-20 Accuracy: wird berechnet...</li>
+        <li>Top-100 Accuracy: wird berechnet...</li>
+      </ul>
+    </section>
+
+    <section id="diskussion" class="content-card" aria-labelledby="diskussion-title">
+      <div class="section-head">
+        <p class="section-kicker">Bereich 3</p>
+
+        <h2 id="diskussion-title">Diskussion</h2>
+      </div>
+
+      <div class="text-card">
+        <p>
+          Für diese Anwendung wurde ein rekurrentes Long Short-Term Memory (LSTM) Netzwerk zur Wortvorhersage trainiert.
+          Das Modell wurde auf einem selbst erstellten deutschen Trainingskorpus trainiert und lernt statistische Wortfolgen sowie sprachliche Muster.
+          Die Ergebnisse zeigen, dass bei häufig vorkommenden Wortkombinationen oft sinnvolle Vorhersagen erzeugt werden konnten.
+          Bei unbekannten oder seltenen Wortfolgen entstanden dagegen teilweise unlogische Vorschläge.
+          Dies liegt unter anderem an der begrenzten Größe des Trainingsdatensatzes und der vergleichsweise kleinen Modellarchitektur für die Browser-Ausführung.
+          Besonders gut funktionierten Eingaben mit bekannten Satzmustern wie „ein modell“, „das modell“ oder „die universität“.
+          Die Top-k-Evaluation zeigte, dass korrekte Wörter häufiger unter mehreren Vorschlägen vorkamen als ausschließlich an erster Stelle.
+          Während des Trainings wurde deutlich, dass mehr Trainingsdaten die Modellqualität verbessern können.
+          Außerdem wurde beobachtet, dass ein LSTM keine Sprache versteht, sondern Wahrscheinlichkeiten für Wortfolgen berechnet.
+          Insgesamt zeigt die Anwendung erfolgreich das Prinzip der autoregressiven Wortvorhersage mit neuronalen Netzen.
+        </p>
+      </div>
+    </section>
+
+    <section id="dokumentation" class="content-card" aria-labelledby="dokumentation-title">
+      <div class="section-head">
+        <p class="section-kicker">Bereich 4</p>
+
+        <h2 id="dokumentation-title">Dokumentation</h2>
+      </div>
+
+      <div class="documentation-grid">
+        <article class="text-card">
+          <h3>Technisch</h3>
+
+          <p>
+            Für die Umsetzung der Anwendung wurden TensorFlow.js und Chart.js verwendet.
+            TensorFlow.js dient zum Erstellen, Trainieren und Ausführen des rekurrenten LSTM-Netzwerks direkt im Browser.
+            Chart.js wird genutzt, um die Top-k-Accuracy-Werte der Modellperformance grafisch darzustellen.
+            Die Anwendung verwendet ein gestapeltes LSTM-Netzwerk mit zwei Hidden-Layern, einem Softmax-Output sowie dem Adam-Optimizer.
+            Das Modell wird beim Laden der Seite dynamisch trainiert und anschließend für die Wortvorhersage genutzt.
+            Zur Verarbeitung der Eingaben werden Tokenisierung, One-Hot-Encoding und Tensor-Repräsentationen verwendet.
+            Besonderheiten der Implementierung sind die automatische Wortgenerierung, die Auswahl vorgeschlagener Wörter und die Berechnung der Top-k-Accuracy.
+            Aus Gründen der Browser-Performance wurde mit 64 LSTM-Units pro Layer gearbeitet. Die Aufgabenstellung nennt 100 Units als Orientierung, erlaubt jedoch Experimente mit anderen Architekturen.
+          </p>
+        </article>
+
+        <article class="text-card">
+          <h3>Fachlich</h3>
+
+          <p>
+            Die Anwendung implementiert ein Language Model (LM) zur Wortvorhersage auf Basis eines rekurrenten LSTM-Netzwerks.
+            Zunächst wird ein deutscher Trainingsdatensatz tokenisiert und in ein Wörterbuch überführt.
+            Anschließend werden Trainingssequenzen erzeugt, bei denen mehrere aufeinanderfolgende Wörter als Eingabe und das jeweils nächste Wort als Zielwert verwendet werden.
+            Diese Daten werden mittels One-Hot-Encoding in Tensoren umgewandelt und zum Training des neuronalen Netzes verwendet.
+            Das Modell berechnet Wahrscheinlichkeiten für mögliche nächste Wörter und gibt die wahrscheinlichsten Vorschläge aus.
+            Nutzer können Wörter auswählen, automatisch generieren lassen oder Schritt für Schritt einen Text erzeugen.
+            Zur Bewertung der Modellqualität wird zusätzlich eine Top-k-Evaluation durchgeführt (k = 1, 5, 10, 20 und 100).
+            Dabei wird überprüft, wie häufig das korrekte nächste Wort unter den wahrscheinlichsten Vorhersagen enthalten ist.
+            Da das Modell auf einem kleinen Trainingskorpus trainiert wurde, können einzelne Formulierungen teilweise rekonstruiert oder ähnlich wiedergegeben werden. Daraus ergibt sich ein mögliches Datenschutzproblem, wenn sensible oder personenbezogene Trainingsdaten verwendet würden.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="quellen" class="content-card" aria-labelledby="quellen-title">
+      <div class="section-head">
+        <p class="section-kicker">Zusatz</p>
+
+        <h2 id="quellen-title">Quellen</h2>
+      </div>
+
+      <div class="text-card">
+        <ul>
+          <li>TensorFlow.js Documentation: https://www.tensorflow.org/js</li>
+          <li>TensorFlow.js API: https://js.tensorflow.org/api/latest/</li>
+          <li>TensorFlow.js Demos: https://www.tensorflow.org/js/demos</li>
+          <li>Chart.js Documentation: https://www.chartjs.org/</li>
+          <li>Mikolov, T. et al.: Recurrent neural network based language model</li>
+          <li>Wikipedia: Language Model – https://en.wikipedia.org/wiki/Language_model</li>
+          <li>Hintergrundwissen zu Cross-Entropy Loss und Language Models aus der Aufgabenstellung.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
