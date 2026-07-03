@@ -60,6 +60,7 @@
         <p class="section-text">
           Geben Sie einen Text ein und lassen Sie sich die wahrscheinlichsten nächsten Wörter vorhersagen.
           Die Eingabe sollte aus vollständigen, durch Leerzeichen getrennten Wörtern bestehen.
+          Unbekannte Wörter außerhalb des Trainingswortschatzes können die Qualität der Vorhersage beeinträchtigen.
         </p>
       </div>
 
@@ -142,9 +143,10 @@
           Die Ergebnisse zeigen, dass bei häufig vorkommenden Wortkombinationen oft sinnvolle Vorhersagen erzeugt werden konnten.
           Bei unbekannten oder seltenen Wortfolgen entstanden dagegen teilweise unlogische Vorschläge.
           Dies liegt unter anderem an der begrenzten Größe des Trainingsdatensatzes und der vergleichsweise kleinen Modellarchitektur für die Browser-Ausführung.
+          Während der Entwicklung wurden unterschiedliche LSTM-Größen sowie verschiedene Trainings-Epochen getestet.
+          Höhere Werte führten teilweise zu stabileren Vorhersagen, erhöhten jedoch gleichzeitig die Trainingszeit im Browser, weshalb die finale Architektur einen Kompromiss zwischen Modellqualität und Performance darstellt.
           Besonders gut funktionierten Eingaben mit bekannten Satzmustern wie „ein modell“, „das modell“ oder „die universität“.
           Die Top-k-Evaluation zeigte, dass korrekte Wörter häufiger unter mehreren Vorschlägen vorkamen als ausschließlich an erster Stelle.
-          Während des Trainings wurde deutlich, dass mehr Trainingsdaten die Modellqualität verbessern können.
           Außerdem wurde beobachtet, dass ein LSTM keine Sprache versteht, sondern Wahrscheinlichkeiten für Wortfolgen berechnet.
           Insgesamt zeigt die Anwendung erfolgreich das Prinzip der autoregressiven Wortvorhersage mit neuronalen Netzen.
         </p>
@@ -170,7 +172,9 @@
             Das Modell wird beim Laden der Seite dynamisch trainiert und anschließend für die Wortvorhersage genutzt.
             Zur Verarbeitung der Eingaben werden Tokenisierung, One-Hot-Encoding und Tensor-Repräsentationen verwendet.
             Besonderheiten der Implementierung sind die automatische Wortgenerierung, die Auswahl vorgeschlagener Wörter und die Berechnung der Top-k-Accuracy.
-            Aus Gründen der Browser-Performance wurde mit 64 LSTM-Units pro Layer gearbeitet. Die Aufgabenstellung nennt 100 Units als Orientierung, erlaubt jedoch Experimente mit anderen Architekturen.
+            Die finale Architektur besteht aus zwei LSTM-Hidden-Layern mit jeweils 64 Units, einem Softmax-Output mit der Größe des Wörterbuchs, dem Loss categoricalCrossentropy, dem Adam-Optimizer mit einer Learning Rate von 0.005, einer Batch Size von 32 sowie 120 Trainings-Epochen.
+            Aus Gründen der Browser-Performance wurde bewusst eine kleinere Architektur als die in der Aufgabenstellung vorgeschlagenen 100 Units gewählt.
+            Diese stellt einen guten Kompromiss zwischen Trainingszeit und Modellqualität dar.
           </p>
         </article>
 
@@ -186,7 +190,9 @@
             Nutzer können Wörter auswählen, automatisch generieren lassen oder Schritt für Schritt einen Text erzeugen.
             Zur Bewertung der Modellqualität wird zusätzlich eine Top-k-Evaluation durchgeführt (k = 1, 5, 10, 20 und 100).
             Dabei wird überprüft, wie häufig das korrekte nächste Wort unter den wahrscheinlichsten Vorhersagen enthalten ist.
-            Da das Modell auf einem kleinen Trainingskorpus trainiert wurde, können einzelne Formulierungen teilweise rekonstruiert oder ähnlich wiedergegeben werden. Daraus ergibt sich ein mögliches Datenschutzproblem, wenn sensible oder personenbezogene Trainingsdaten verwendet würden.
+            Da mit einem kleinen selbst erstellten Trainingskorpus gearbeitet wird, kann das Modell einzelne bekannte Satzmuster teilweise rekonstruieren oder ähnlich wiedergeben.
+            Bei sensiblen oder personenbezogenen Trainingsdaten könnte dies ein Datenschutzproblem darstellen.
+            Aus diesem Grund wurde für diese Anwendung ausschließlich ein neutraler Trainingskorpus verwendet.
           </p>
         </article>
       </div>
